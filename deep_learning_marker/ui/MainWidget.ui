@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWidget</class>
+ <widget class="QWidget" name="MainWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1186</width>
+    <height>747</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout" rowstretch="9,1" columnstretch="1,5,1">
+   <property name="spacing">
+    <number>10</number>
+   </property>
+   <item row="0" column="2">
+    <widget class="OptionsButtonBar" name="buttonBar" native="true"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="CVGraphicsView" name="graphicsView"/>
+   </item>
+   <item row="0" column="0">
+    <widget class="QWidget" name="paraBar" native="true"/>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="MousePositionWidget" name="mousePos" native="true"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MousePositionWidget</class>
+   <extends>QWidget</extends>
+   <header>ui/widgets/MousePositionWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CVGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>ui/widgets/CVImageViewer/CVGraphicsView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>OptionsButtonBar</class>
+   <extends>QWidget</extends>
+   <header>ui/widgets/OptionsButtonBar.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

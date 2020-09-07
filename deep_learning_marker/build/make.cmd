@@ -1,0 +1,1 @@
+qmake -tp vc ../deep_learning_marker.pro

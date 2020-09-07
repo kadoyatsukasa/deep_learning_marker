@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/qss"/>
+    <qresource prefix="/mainqss">
+        <file>MainWidget.qss</file>
+    </qresource>
+</RCC>
