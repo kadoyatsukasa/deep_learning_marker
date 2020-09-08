@@ -15,6 +15,10 @@ public:
 	explicit MousePositionWidget(QWidget* parent = nullptr);
 	~MousePositionWidget();
 
+private slots:
+	void handleChangeCurrentPosition(QPoint current);
+	void handleChangeRoiStart(QPoint start);
+	void handleChangeRoiEnd(QPoint end);
 private:
 	Ui::MousePositionWidget* ui;
 };

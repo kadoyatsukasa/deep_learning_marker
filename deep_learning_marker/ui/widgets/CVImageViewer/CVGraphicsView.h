@@ -25,6 +25,8 @@ private:
 	bool isContainPoint(const QPoint& point);
 	QPoint mapToPixmap(const QPoint& point);
 
+	void refresh(QPainter&);
+
 private:
 	QGraphicsPixmapItem* m_pixmap;
 	QGraphicsScene* m_scene;

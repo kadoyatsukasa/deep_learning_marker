@@ -1,6 +1,7 @@
 #include "CVGraphicsView.h"
 #include "model/ImageModel.h"
 #include "model/RoiRectModel.h"
+#include "controller/SignalCenter.h"
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
@@ -22,7 +23,6 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	}
 
 	QPainter painter(viewport());
-	qDebug() << "****************QGraphicsView::paintEvent() active ***********************************";
 
 	QPixmap img;
 	img = m_pixmap->pixmap();
@@ -34,17 +34,17 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	m_topleft.setX((viewport()->width() - m_pixmap->pixmap().width()) / 2);
 	m_topleft.setY((viewport()->height() - m_pixmap->pixmap().height()) / 2);
 
-	qDebug() << m_topleft;
-	qDebug() << ImageModel::instance()->scalingFactory;
-
 	if (m_isStartingCrop)
 	{
-		qDebug() << RoiRectModel::instance()->width() << '\t' << RoiRectModel::instance()->height();
 		QPainter t_painter(viewport());
 		QPen pen;
 		pen.setBrush(Qt::red);
 		pen.setWidth(1.5);
 		t_painter.setPen(pen);
+
+		refresh(t_painter);
+		/*qDebug() << RoiRectModel::instance()->roiStartPoints.size();
+		qDebug() << RoiRectModel::instance()->roiEndPoints.size();
 
 		if (RoiRectModel::instance()->start.x() < RoiRectModel::instance()->end.x())
 		{
@@ -87,28 +87,26 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 					RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
 				);
 			}
-		}
+		}*/
 	}
 }
 
 void CVGraphicsView::mousePressEvent(QMouseEvent* event)
 {
 	QGraphicsView::mousePressEvent(event);
-	qDebug() << "****************QGraphicsView::mousePressEvent() active ***********************************";
 	if ((event->buttons() == Qt::LeftButton) /*&& (isContainPoint(event->pos()))*/)
 	{
 		RoiRectModel::instance()->start = mapToPixmap(event->pos());
-		RoiRectModel::instance()->end = mapToPixmap(event->pos());
+		//RoiRectModel::instance()->end = mapToPixmap(event->pos());
 		m_isStartingCrop = true;
 
-		qDebug() << RoiRectModel::instance()->start << '\t' << RoiRectModel::instance()->end;
+		emit SignalCenter::instance()->displayRoiStartPoint(RoiRectModel::instance()->start);
 	}
 }
 
 void CVGraphicsView::mouseMoveEvent(QMouseEvent* event)
 {
 	QGraphicsView::mouseMoveEvent(event);
-	qDebug() << "****************QGraphicsView::mouseMoveEvent() active ***********************************";
 
 	QPixmap temp = m_pixmap->pixmap();
 	QPainter t_painter(&temp);
@@ -120,9 +118,10 @@ void CVGraphicsView::mouseMoveEvent(QMouseEvent* event)
 		if (isContainPoint(event->pos()))
 		{
 			RoiRectModel::instance()->end = mapToPixmap(event->pos());
-			qDebug() << RoiRectModel::instance()->end;
 		}
 	}
+
+	emit SignalCenter::instance()->displayCurrentMousePoint(event->pos());
 
 	viewport()->update();
 }
@@ -130,9 +129,12 @@ void CVGraphicsView::mouseMoveEvent(QMouseEvent* event)
 void CVGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 {
 	QGraphicsView::mouseReleaseEvent(event);
-	qDebug() << "****************QGraphicsView::mouseReleaseEvent() active ***********************************";
 	QRect rect(RoiRectModel::instance()->start, RoiRectModel::instance()->end);
 	m_isStartingCrop = false;
+
+	RoiRectModel::instance()->roiStartPoints.push_back(RoiRectModel::instance()->start);
+	RoiRectModel::instance()->roiEndPoints.push_back(RoiRectModel::instance()->end);
+	emit SignalCenter::instance()->displayRoiEndPoint(RoiRectModel::instance()->end);
 }
 
 void CVGraphicsView::resizeEvent(QResizeEvent* event)
@@ -164,8 +166,6 @@ bool CVGraphicsView::isContainPoint(const QPoint& point)
 	QPoint topleft;
 	topleft.setX((viewport()->width() - pixSize.width()) / 2);
 	topleft.setY((viewport()->height() - pixSize.height()) / 2);
-
-	qDebug() << topleft;
 
 	QRect rect(m_topleft, pixSize);
 	return rect.contains(point);
@@ -199,9 +199,6 @@ QPoint CVGraphicsView::mapToPixmap(const QPoint& point)
 		topleft.setY((viewport()->height() - pixSize.height()) / 2);
 		pos.setX(point.x() - m_topleft.x());
 		pos.setY(point.y() - m_topleft.y());
-
-		qDebug() << topleft;
-		qDebug() << pos;
 	}
 	QPoint result;
 	result = QPoint(pos.x() / (ImageModel::instance()->scalingFactory), pos.y() / (ImageModel::instance()->scalingFactory));
@@ -227,4 +224,61 @@ void CVGraphicsView::loadImage(const char* imagePath)
 		);
 	m_pixmap->setPixmap(QPixmap::fromImage(ImageModel::instance()->targetImage).scaled(viewport()->width(), viewport()->height(), Qt::KeepAspectRatio));
 	m_scene->addItem(m_pixmap);
+}
+
+void CVGraphicsView::refresh(QPainter& painter)
+{
+	std::vector<QPoint>::iterator start;
+	std::vector<QPoint>::iterator end;
+
+	qDebug() << RoiRectModel::instance()->roiStartPoints.size();
+	qDebug() << RoiRectModel::instance()->roiEndPoints.size();
+
+	for (start = RoiRectModel::instance()->roiStartPoints.begin(), end = RoiRectModel::instance()->roiEndPoints.begin();
+		start != RoiRectModel::instance()->roiStartPoints.end(), end != RoiRectModel::instance()->roiEndPoints.end();
+		++start, ++end)
+	{
+		if (RoiRectModel::instance()->start.x() < RoiRectModel::instance()->end.x())
+		{
+			if (RoiRectModel::instance()->start.y() < RoiRectModel::instance()->end.y())
+			{
+				painter.drawRect(
+					m_topleft.x() + RoiRectModel::instance()->start.x() * ImageModel::instance()->scalingFactory,
+					m_topleft.y() + RoiRectModel::instance()->start.y() * ImageModel::instance()->scalingFactory,
+					RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
+					RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
+				);
+			}
+			else
+			{
+				painter.drawRect(
+					m_topleft.x() + RoiRectModel::instance()->start.x() * ImageModel::instance()->scalingFactory,
+					m_topleft.y() + RoiRectModel::instance()->end.y() * ImageModel::instance()->scalingFactory,
+					RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
+					RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
+				);
+			}
+		}
+		else
+		{
+			if (RoiRectModel::instance()->start.y() > RoiRectModel::instance()->end.y())
+			{
+				painter.drawRect(
+					m_topleft.x() + RoiRectModel::instance()->end.x() * ImageModel::instance()->scalingFactory,
+					m_topleft.y() + RoiRectModel::instance()->end.y() * ImageModel::instance()->scalingFactory,
+					RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
+					RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
+				);
+			}
+			else
+			{
+				painter.drawRect(
+					m_topleft.x() + RoiRectModel::instance()->end.x() * ImageModel::instance()->scalingFactory,
+					m_topleft.y() + RoiRectModel::instance()->start.y() * ImageModel::instance()->scalingFactory,
+					RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
+					RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
+				);
+			}
+		}
+	}
 }

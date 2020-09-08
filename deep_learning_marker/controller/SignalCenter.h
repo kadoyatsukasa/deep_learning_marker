@@ -12,6 +12,9 @@ public:
 
 signals:
 	void displayImage(const char*);
+	void displayCurrentMousePoint(QPoint);
+	void displayRoiStartPoint(QPoint);
+	void displayRoiEndPoint(QPoint);
 
 private:
 	explicit SignalCenter();

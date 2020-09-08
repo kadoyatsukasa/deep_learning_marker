@@ -16,6 +16,10 @@ public:
 public:
 	QPoint start;
 	QPoint end;
+
+	std::vector<QPoint> roiStartPoints;
+	std::vector<QPoint> roiEndPoints;
+
 private:
 	RoiRectModel();
 };
