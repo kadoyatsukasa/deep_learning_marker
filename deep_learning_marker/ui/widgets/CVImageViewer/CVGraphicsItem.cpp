@@ -39,5 +39,9 @@ void CVGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 //		painter->setPen(QPen(Qt::blue));
 //	painter->setBrush(m_brushColor);
 //
-//	setPixmap(QPixmap::fromImage(ImageModel::instance()->targetImage).scaled(CVGraphicsModel::instance()->viewWidth, CVGraphicsModel::instance()->viewHeight, Qt::KeepAspectRatio));
+//	//QPixmap img;
+//	//img.fromImage(ImageModel::instance()->targetImage).scaled(CVGraphicsModel::instance()->viewWidth, CVGraphicsModel::instance()->viewHeight, Qt::KeepAspectRatio);
+//
+//	//painter->drawPixmap(QRect(0, 0, CVGraphicsModel::instance()->viewWidth, CVGraphicsModel::instance()->viewHeight), img);
+//	//setPixmap(img);
 //}

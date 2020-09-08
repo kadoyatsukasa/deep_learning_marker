@@ -28,8 +28,8 @@ SOURCES += \
     model/CVGraphicsModel.cpp \
     ui/MainWidget.cpp \
     ui/MainWindow.cpp \
-    ui/widgets/CVImageViewer/CVGraphicsItem.cpp \
-    ui/widgets/CVImageViewer/CVGraphicsScene.cpp \
+ #   ui/widgets/CVImageViewer/CVGraphicsItem.cpp \
+ #   ui/widgets/CVImageViewer/CVGraphicsScene.cpp \
     ui/widgets/CVImageViewer/CVGraphicsView.cpp \
     ui/widgets/MousePositionWidget.cpp \
     model/ImageModel.cpp \
@@ -41,8 +41,8 @@ HEADERS += \
     model/CVGraphicsModel.h \
     ui/MainWidget.h \
     ui/MainWindow.h \
-    ui/widgets/CVImageViewer/CVGraphicsItem.h \
-    ui/widgets/CVImageViewer/CVGraphicsScene.h \
+#    ui/widgets/CVImageViewer/CVGraphicsItem.h \
+ #   ui/widgets/CVImageViewer/CVGraphicsScene.h \
     ui/widgets/CVImageViewer/CVGraphicsView.h \
     ui/widgets/MousePositionWidget.h \
     model/ImageModel.h \

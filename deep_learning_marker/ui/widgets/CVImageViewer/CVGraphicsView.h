@@ -3,8 +3,6 @@
 
 #include <QGraphicsView>
 #include <QWidget>
-#include "CVGraphicsScene.h"
-#include "CVGraphicsItem.h"
 #include "model/ImageModel.h"
 
 class CVGraphicsView : public QGraphicsView
@@ -19,7 +17,7 @@ protected:
 	void mousePressEvent(QMouseEvent* event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
 	void mouseReleaseEvent(QMouseEvent* event) override;
-	//void paintEvent(QPaintEvent* event) override;
+	void paintEvent(QPaintEvent* event) override;
 	void resizeEvent(QResizeEvent* event) override;
 
 private:
@@ -28,10 +26,12 @@ private:
 	QPoint mapToPixmap(const QPoint& point);
 
 private:
-	CVGraphicsItem* m_pixmap;
-	CVGraphicsScene* m_scene;
+	QGraphicsPixmapItem* m_pixmap;
+	QGraphicsScene* m_scene;
+	QPoint m_topleft;
 
 	bool m_isStartingCrop;
+	bool m_isCroping;
 };
 
 #endif // CVIMAGEVIEW_H
