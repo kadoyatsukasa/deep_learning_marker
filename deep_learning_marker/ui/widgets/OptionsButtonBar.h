@@ -28,14 +28,6 @@ private:
 	void clearAllStartPoints(std::vector<QPoint> startPoints);
 	void clearAllEndPoints(std::vector<QPoint> endPoints);
 
-	//void saveAllStartPositions(QSettings& setting, std::vector<QPoint> startPoints);
-	//void saveAllEndPositions(QSettings& setting, std::vector<QPoint> endPoints);
-	//void saveAllRects(QSettings& setting, std::vector<QRect> roiRects);
-
-	void saveAllStartPositions(QFile& file, std::vector<QPoint> pos);
-	void saveAllEndPositions(QFile& file, std::vector<QPoint> pos);
-	void saveAllRects(QFile& file, std::vector<QRect> roiRects);
-
 private:
 	Ui::OptionsButtonBar* ui;
 };
