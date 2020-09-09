@@ -9,13 +9,13 @@ class RoiRectModel
 public:
 	static RoiRectModel* instance();
 
-	inline int height()const { return qAbs(start.y() - end.y()); }
-	inline int width()const { return qAbs(start.x() - end.x()); }
+	inline int height()const { return qAbs(startPoint.y() - endPoint.y()); }
+	inline int width()const { return qAbs(startPoint.x() - endPoint.x()); }
 	inline QSize& size()const { return QSize(width(), height()); }
 
 public:
-	QPoint start;
-	QPoint end;
+	QPoint startPoint;
+	QPoint endPoint;
 
 	std::vector<QPoint> roiStartPoints;
 	std::vector<QPoint> roiEndPoints;

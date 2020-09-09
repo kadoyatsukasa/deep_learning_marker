@@ -20,6 +20,9 @@ protected:
 	void paintEvent(QPaintEvent* event) override;
 	void resizeEvent(QResizeEvent* event) override;
 
+private slots:
+	void handleClearMarks();
+
 private:
 	void init();
 	bool isContainPoint(const QPoint& point);

@@ -12,13 +12,15 @@ public:
 
 public:
 	std::vector<QString> imageDirector;
-	QString imageFilename;
+	QString imageFilePathName;
+	QString imageFilePath;
+	QString imageFileName;
 
 	cv::Mat srcImage;
 	cv::Mat rgbImage;
 	QImage targetImage;
 
-    float scalingFactory;
+	float scalingFactory;
 
 private:
 	explicit ImageModel();

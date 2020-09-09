@@ -17,8 +17,8 @@ public:
 
 private slots:
 	void handleChangeCurrentPosition(QPoint current);
-	void handleChangeRoiStart(QPoint start);
-	void handleChangeRoiEnd(QPoint end);
+	void handleChangeRoiStart(QPoint startPoint);
+	void handleChangeRoiEnd(QPoint endPoint);
 private:
 	Ui::MousePositionWidget* ui;
 };
