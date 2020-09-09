@@ -29,4 +29,6 @@ void OptionsButtonBar::handleLoadSingleImage()
 		ImageModel::instance()->imageFilename = filename;
 		emit SignalCenter::instance()->displayImage(ImageModel::instance()->imageFilename.toStdString().c_str());
 	}
+
+	ImageModel::instance()->imageFilename.clear();
 }
