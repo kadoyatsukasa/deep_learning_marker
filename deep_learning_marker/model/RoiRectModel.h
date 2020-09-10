@@ -21,6 +21,16 @@ public:
 	std::vector<QPoint> roiEndPoints;
 	std::vector<QRect> roiRects;
 
+	const std::vector<QBrush> brush = {
+		Qt::red,
+		Qt::green,
+		Qt::yellow,
+		Qt::black,
+		Qt::white
+	};
+
+	std::vector<QPen> pencilCase;
+
 private:
 	RoiRectModel();
 };

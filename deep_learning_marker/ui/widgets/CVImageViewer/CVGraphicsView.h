@@ -22,6 +22,7 @@ protected:
 
 private slots:
 	void handleClearMarks();
+	void handleChangePen(const QPen&);
 
 private:
 	void init();
@@ -34,6 +35,7 @@ private:
 	QGraphicsPixmapItem* m_pixmap;
 	QGraphicsScene* m_scene;
 	QPoint m_topleft;
+	QPen m_pen;
 
 	bool m_isStartingCrop;
 	bool m_isCroping;

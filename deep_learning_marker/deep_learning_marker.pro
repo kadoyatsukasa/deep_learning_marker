@@ -26,33 +26,33 @@ SOURCES += \
     controller/SignalCenter.cpp \
     main.cpp \
     model/CVGraphicsModel.cpp \
+    model/ParamListModel.cpp \
     ui/MainWidget.cpp \
     ui/MainWindow.cpp \
- #   ui/widgets/CVImageViewer/CVGraphicsItem.cpp \
- #   ui/widgets/CVImageViewer/CVGraphicsScene.cpp \
     ui/widgets/CVImageViewer/CVGraphicsView.cpp \
     ui/widgets/MousePositionWidget.cpp \
     model/ImageModel.cpp \
     model/RoiRectModel.cpp \
-    ui/widgets/OptionsButtonBar.cpp
+    ui/widgets/OptionsButtonBar.cpp \
+    ui/widgets/ParamList.cpp 
 
 HEADERS += \
     controller/SignalCenter.h \
     model/CVGraphicsModel.h \
+    model/ParamListModel.h \
     ui/MainWidget.h \
     ui/MainWindow.h \
-#    ui/widgets/CVImageViewer/CVGraphicsItem.h \
- #   ui/widgets/CVImageViewer/CVGraphicsScene.h \
     ui/widgets/CVImageViewer/CVGraphicsView.h \
     ui/widgets/MousePositionWidget.h \
     model/ImageModel.h \
     model/RoiRectModel.h   \
-    ui/widgets/OptionsButtonBar.h
+    ui/widgets/OptionsButtonBar.h \
+    ui/widgets/ParamList.h 
 
 FORMS += \
     ui/widgets/MousePostionWidget.ui \
     ui/MainWidget.ui  \
-    ui/widgets/OptionsButtonBar.ui
+    ui/widgets/OptionsButtonBar.ui 
     
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -16,11 +16,8 @@ signals:
 	void displayRoiStartPoint(QPoint);
 	void displayRoiEndPoint(QPoint);
 
-	//void clearAllRects(std::vector<QRect> roiRects);
-	//void clearAllStartPoints(std::vector<QPoint> startPoints);
-	//void clearAllEndPoints(std::vector<QPoint> endPoints);
 	void clearAllMarks();
-
+	void changePen(const QPen&);
 private:
 	explicit SignalCenter();
 };

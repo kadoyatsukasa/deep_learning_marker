@@ -1,11 +1,13 @@
 #include "CVGraphicsView.h"
 #include "model/ImageModel.h"
 #include "model/RoiRectModel.h"
+#include "model/ParamListModel.h"
 #include "controller/SignalCenter.h"
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QMouseEvent>
+#include <QModelIndex>
 
 CVGraphicsView::CVGraphicsView(QWidget* parent) :
 	QGraphicsView(parent),
@@ -15,6 +17,7 @@ CVGraphicsView::CVGraphicsView(QWidget* parent) :
 	init();
 
 	connect(SignalCenter::instance(), SIGNAL(clearAllMarks()), this, SLOT(handleClearMarks()));
+	connect(SignalCenter::instance(), SIGNAL(changePen(QPen)), this, SLOT(handleChangePen(QPen)));
 }
 void CVGraphicsView::paintEvent(QPaintEvent* event)
 {
@@ -37,10 +40,10 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	m_topleft.setY((viewport()->height() - m_pixmap->pixmap().height()) / 2);
 
 	QPainter t_painter(viewport());
-	QPen pen;
-	pen.setBrush(Qt::red);
-	pen.setWidth(1.5);
-	t_painter.setPen(pen);
+
+	//m_pen.setBrush(Qt::red);
+	//m_pen.setWidth(1.5);
+	t_painter.setPen(m_pen);
 
 	/*qDebug() << RoiRectModel::instance()->roiStartPoints.size();
 	qDebug() << RoiRectModel::instance()->roiEndPoints.size();*/
@@ -254,4 +257,9 @@ void CVGraphicsView::handleClearMarks()
 	RoiRectModel::instance()->endPoint = QPoint(0, 0);
 
 	viewport()->repaint();
+}
+
+void CVGraphicsView::handleChangePen(const QPen& pen)
+{
+	m_pen = pen;
 }

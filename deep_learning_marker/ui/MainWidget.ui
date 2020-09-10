@@ -23,15 +23,20 @@
    <item row="0" column="1">
     <widget class="CVGraphicsView" name="graphicsView"/>
    </item>
-   <item row="0" column="0">
-    <widget class="QWidget" name="paraBar" native="true"/>
-   </item>
    <item row="1" column="0" colspan="3">
     <widget class="MousePositionWidget" name="mousePos" native="true"/>
+   </item>
+   <item row="0" column="0">
+    <widget class="ParamList" name="listView"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>ParamList</class>
+   <extends>QListView</extends>
+   <header>ui/widgets/ParamList.h</header>
+  </customwidget>
   <customwidget>
    <class>MousePositionWidget</class>
    <extends>QWidget</extends>

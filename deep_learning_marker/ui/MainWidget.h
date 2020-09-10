@@ -2,10 +2,12 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
+#include <QPen>
 
 class MousePositionWidget;
 class CVGraphicsView;
-class OptionButtonBar;
+class OptionsButtonBar;
+class ParamList;
 
 namespace Ui {
 	class MainWidget;
@@ -23,11 +25,16 @@ private:
 	void initWidget();
 private slots:
 	void handleDisplayImage(const char*);
+	void handleChangePen(const QModelIndex& index);
+
 private:
 	Ui::MainWidget* ui;
 	MousePositionWidget* m_mousePos;
 	CVGraphicsView* m_image;
-	OptionButtonBar* m_buttonBar;
+	OptionsButtonBar* m_buttonBar;
+	ParamList* m_list;
+
+	QPen m_pen;
 };
 
 #endif // MAINWIDGET_H
