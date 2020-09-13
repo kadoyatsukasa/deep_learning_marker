@@ -39,7 +39,7 @@ void OptionsButtonBar::handleLoadSingleImage()
 		ImageModel::instance()->imageFilePath = info.absolutePath();
 		ImageModel::instance()->imageFileName = info.baseName();
 
-		emit SignalCenter::instance()->displayImage(ImageModel::instance()->imageFilePathName.toStdString().c_str());
+		emit SignalCenter::instance()->displayImage(ImageModel::instance()->imageFilePathName);
 
 		qDebug() << info.absolutePath();
 		qDebug() << info.fileName();

@@ -21,10 +21,8 @@ public:
 	explicit MainWidget(QWidget* parent = nullptr);
 	~MainWidget();
 
-private:
-	void initWidget();
 private slots:
-	void handleDisplayImage(const char*);
+	void handleDisplayImage(QString);
 	void handleChangePen(const QModelIndex& index);
 
 private:

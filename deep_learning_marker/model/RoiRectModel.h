@@ -4,6 +4,12 @@
 #include <QPoint>
 #include <QPainter>
 
+struct PEN_CASE
+{
+	QPen pen;
+	QRect rect;
+};
+
 class RoiRectModel
 {
 public:
@@ -21,15 +27,19 @@ public:
 	std::vector<QPoint> roiEndPoints;
 	std::vector<QRect> roiRects;
 
-	const std::vector<QBrush> brush = {
-		Qt::red,
-		Qt::green,
-		Qt::yellow,
-		Qt::black,
-		Qt::white
+	const std::vector<int> colourPen = {
+		0xFF0000,
+		0xFF1493,
+		0x00FF7F,
+		0x00FFFF,
+		0x00FF00,
+		0xFF00FF
 	};
 
 	std::vector<QPen> pencilCase;
+
+	std::vector<PEN_CASE> penCase;
+	PEN_CASE suit;
 
 private:
 	RoiRectModel();

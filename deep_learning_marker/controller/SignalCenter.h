@@ -11,13 +11,12 @@ public:
 	static SignalCenter* instance();
 
 signals:
-	void displayImage(const char*);
+	void displayImage(QString);
 	void displayCurrentMousePoint(QPoint);
 	void displayRoiStartPoint(QPoint);
 	void displayRoiEndPoint(QPoint);
 
 	void clearAllMarks();
-	void changePen(const QPen&);
 private:
 	explicit SignalCenter();
 };

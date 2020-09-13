@@ -17,7 +17,6 @@ CVGraphicsView::CVGraphicsView(QWidget* parent) :
 	init();
 
 	connect(SignalCenter::instance(), SIGNAL(clearAllMarks()), this, SLOT(handleClearMarks()));
-	connect(SignalCenter::instance(), SIGNAL(changePen(QPen)), this, SLOT(handleChangePen(QPen)));
 }
 void CVGraphicsView::paintEvent(QPaintEvent* event)
 {
@@ -27,11 +26,10 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 		return;
 	}
 
-	QPainter painter(viewport());
-
+	m_imgCanvas = new QPainter(viewport());
 	QPixmap img;
 	img = m_pixmap->pixmap();
-	painter.drawPixmap(QRect(0, 0, width(), height()), img);
+	m_imgCanvas->drawPixmap(QRect(0, 0, width(), height()), img);
 
 	QSize rectSize = event->rect().size();
 	ImageModel::instance()->scalingFactory = 1.0 * rectSize.width() / m_pixmap->pixmap().size().width();
@@ -39,29 +37,23 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	m_topleft.setX((viewport()->width() - m_pixmap->pixmap().width()) / 2);
 	m_topleft.setY((viewport()->height() - m_pixmap->pixmap().height()) / 2);
 
-	QPainter t_painter(viewport());
+	m_roiCanvas = new QPainter(viewport());
 
-	//m_pen.setBrush(Qt::red);
-	//m_pen.setWidth(1.5);
-	t_painter.setPen(m_pen);
-
-	/*qDebug() << RoiRectModel::instance()->roiStartPoints.size();
-	qDebug() << RoiRectModel::instance()->roiEndPoints.size();*/
+	m_roiCanvas->setPen(RoiRectModel::instance()->suit.pen);
 
 	if (RoiRectModel::instance()->startPoint.x() < RoiRectModel::instance()->endPoint.x())
 	{
 		if (RoiRectModel::instance()->startPoint.y() < RoiRectModel::instance()->endPoint.y())
 		{
-			t_painter.drawRect(
+			RoiRectModel::instance()->suit.rect = QRect(
 				m_topleft.x() + RoiRectModel::instance()->startPoint.x() * ImageModel::instance()->scalingFactory,
 				m_topleft.y() + RoiRectModel::instance()->startPoint.y() * ImageModel::instance()->scalingFactory,
 				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
-				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
-			);
+				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory);
 		}
 		else
 		{
-			t_painter.drawRect(
+			RoiRectModel::instance()->suit.rect = QRect(
 				m_topleft.x() + RoiRectModel::instance()->startPoint.x() * ImageModel::instance()->scalingFactory,
 				m_topleft.y() + RoiRectModel::instance()->endPoint.y() * ImageModel::instance()->scalingFactory,
 				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
@@ -73,7 +65,7 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	{
 		if (RoiRectModel::instance()->startPoint.y() > RoiRectModel::instance()->endPoint.y())
 		{
-			t_painter.drawRect(
+			RoiRectModel::instance()->suit.rect = QRect(
 				m_topleft.x() + RoiRectModel::instance()->endPoint.x() * ImageModel::instance()->scalingFactory,
 				m_topleft.y() + RoiRectModel::instance()->endPoint.y() * ImageModel::instance()->scalingFactory,
 				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
@@ -82,7 +74,7 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 		}
 		else
 		{
-			t_painter.drawRect(
+			RoiRectModel::instance()->suit.rect = QRect(
 				m_topleft.x() + RoiRectModel::instance()->endPoint.x() * ImageModel::instance()->scalingFactory,
 				m_topleft.y() + RoiRectModel::instance()->startPoint.y() * ImageModel::instance()->scalingFactory,
 				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
@@ -91,10 +83,9 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 		}
 	}
 
-	//RoiRectModel::instance()->roiStartPoints.push_back(RoiRectModel::instance()->startPoint);
-	//RoiRectModel::instance()->roiEndPoints.push_back(RoiRectModel::instance()->endPoint);
+	m_roiCanvas->drawRect(RoiRectModel::instance()->suit.rect);
 
-	refresh(t_painter);
+	refresh(m_roiCanvas);
 }
 
 void CVGraphicsView::mousePressEvent(QMouseEvent* event)
@@ -112,11 +103,6 @@ void CVGraphicsView::mousePressEvent(QMouseEvent* event)
 void CVGraphicsView::mouseMoveEvent(QMouseEvent* event)
 {
 	QGraphicsView::mouseMoveEvent(event);
-
-	QPixmap temp = m_pixmap->pixmap();
-	QPainter t_painter(&temp);
-
-	t_painter.setBrush(Qt::red);
 
 	if ((event->buttons() == Qt::LeftButton) && m_isStartingCrop)
 	{
@@ -140,6 +126,9 @@ void CVGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 	RoiRectModel::instance()->roiStartPoints.push_back(RoiRectModel::instance()->startPoint);
 	RoiRectModel::instance()->roiEndPoints.push_back(RoiRectModel::instance()->endPoint);
 	RoiRectModel::instance()->roiRects.push_back(rect);
+
+	RoiRectModel::instance()->suit.rect = rect;
+	RoiRectModel::instance()->penCase.push_back(RoiRectModel::instance()->suit);
 
 	emit SignalCenter::instance()->displayRoiEndPoint(RoiRectModel::instance()->endPoint);
 }
@@ -212,11 +201,11 @@ QPoint CVGraphicsView::mapToPixmap(const QPoint& point)
 	return result;
 }
 
-void CVGraphicsView::loadImage(const char* imagePath)
+void CVGraphicsView::loadImage(QString absolutePath)
 {
 	handleClearMarks();
 
-	ImageModel::instance()->srcImage = cv::imread(imagePath);
+	ImageModel::instance()->srcImage = cv::imread(absolutePath.toStdString().c_str());
 
 	if (ImageModel::instance()->srcImage.empty())
 		return;
@@ -235,16 +224,14 @@ void CVGraphicsView::loadImage(const char* imagePath)
 	m_scene->addItem(m_pixmap);
 }
 
-void CVGraphicsView::refresh(QPainter& painter)
+void CVGraphicsView::refresh(QPainter* painter)
 {
-	std::vector<QPoint>::iterator startPoint;
-	std::vector<QPoint>::iterator endPoint;
+	std::vector<PEN_CASE>::iterator it;
 
-	std::vector<QRect>::iterator rect;
-
-	for (rect = RoiRectModel::instance()->roiRects.begin(); rect != RoiRectModel::instance()->roiRects.end(); ++rect)
+	for (it = RoiRectModel::instance()->penCase.begin(); it != RoiRectModel::instance()->penCase.end(); ++it)
 	{
-		painter.drawRect(*rect);
+		painter->setPen(it->pen);
+		painter->drawRect(it->rect);
 	}
 }
 
@@ -255,11 +242,7 @@ void CVGraphicsView::handleClearMarks()
 	RoiRectModel::instance()->roiEndPoints.clear();
 	RoiRectModel::instance()->startPoint = QPoint(0, 0);
 	RoiRectModel::instance()->endPoint = QPoint(0, 0);
+	RoiRectModel::instance()->penCase.clear();
 
 	viewport()->repaint();
-}
-
-void CVGraphicsView::handleChangePen(const QPen& pen)
-{
-	m_pen = pen;
 }

@@ -11,7 +11,7 @@ class CVGraphicsView : public QGraphicsView
 public:
 	explicit CVGraphicsView(QWidget* parent = nullptr);
 
-	void loadImage(const char* img);
+	void loadImage(QString absolutePath);
 
 protected:
 	void mousePressEvent(QMouseEvent* event) override;
@@ -22,20 +22,20 @@ protected:
 
 private slots:
 	void handleClearMarks();
-	void handleChangePen(const QPen&);
 
 private:
 	void init();
 	bool isContainPoint(const QPoint& point);
 	QPoint mapToPixmap(const QPoint& point);
 
-	void refresh(QPainter&);
+	void refresh(QPainter*);
 
 private:
 	QGraphicsPixmapItem* m_pixmap;
 	QGraphicsScene* m_scene;
 	QPoint m_topleft;
-	QPen m_pen;
+	QPainter* m_imgCanvas;
+	QPainter* m_roiCanvas;
 
 	bool m_isStartingCrop;
 	bool m_isCroping;

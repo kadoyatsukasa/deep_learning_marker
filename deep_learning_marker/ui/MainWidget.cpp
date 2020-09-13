@@ -20,9 +20,8 @@ MainWidget::MainWidget(QWidget* parent) :
 	m_mousePos(nullptr)
 {
 	ui->setupUi(this);
-	//initWidget();
 
-	connect(SignalCenter::instance(), SIGNAL(displayImage(const char*)), this, SLOT(handleDisplayImage(const char*)));
+	connect(SignalCenter::instance(), SIGNAL(displayImage(QString)), this, SLOT(handleDisplayImage(QString)));
 	connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(handleChangePen(QModelIndex)));
 }
 
@@ -31,23 +30,15 @@ MainWidget::~MainWidget()
 	delete ui;
 }
 
-void MainWidget::initWidget()
+void MainWidget::handleDisplayImage(QString absolutePath)
 {
-	//m_buttonBar = new OptionsButtonBar(this);
-	//m_image = new CVGraphicsView(this);
-	//m_list = new ParamList(this);
-	//m_mousePos = new MousePositionWidget(this);
-}
-
-void MainWidget::handleDisplayImage(const char* img)
-{
-	ui->graphicsView->loadImage(img);
+	ui->graphicsView->loadImage(absolutePath);
 }
 
 void MainWidget::handleChangePen(const QModelIndex& index)
 {
-	m_pen.setBrush(RoiRectModel::instance()->brush[index.row()]);
-	m_pen.setWidth(3);
-	RoiRectModel::instance()->pencilCase.push_back(m_pen);
-	emit SignalCenter::instance()->changePen(m_pen);
+	QPen t_pen(RoiRectModel::instance()->colourPen[index.row()]);
+	t_pen.setWidth(3);
+
+	RoiRectModel::instance()->suit.pen = t_pen;
 }
