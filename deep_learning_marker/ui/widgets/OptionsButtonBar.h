@@ -20,6 +20,7 @@ public:
 
 private slots:
 	void handleLoadSingleImage();
+	void handleLoadArchive();
 	void handleSaveAllPositions();
 	void handleClearAllMarks();
 

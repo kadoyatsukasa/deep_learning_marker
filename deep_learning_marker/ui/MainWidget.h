@@ -21,6 +21,9 @@ public:
 	explicit MainWidget(QWidget* parent = nullptr);
 	~MainWidget();
 
+protected:
+	void keyPressEvent(QKeyEvent* event);
+
 private slots:
 	void handleDisplayImage(QString);
 	void handleChangePen(const QModelIndex& index);
@@ -33,6 +36,7 @@ private:
 	ParamList* m_list;
 
 	QPen m_pen;
+	std::vector<QString>::iterator m_currentImage;
 };
 
 #endif // MAINWIDGET_H

@@ -1,0 +1,74 @@
+QMAKE_CXX.QT_COMPILER_STDCXX = 199711L
+QMAKE_CXX.QMAKE_MSC_VER = 1927
+QMAKE_CXX.QMAKE_MSC_FULL_VER = 192729111
+QMAKE_CXX.COMPILER_MACROS = \
+    QT_COMPILER_STDCXX \
+    QMAKE_MSC_VER \
+    QMAKE_MSC_FULL_VER
+QMAKE_CXX.INCDIRS = \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/INCLUDE" \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/ATLMFC/INCLUDE" \
+    "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/ucrt" \
+    "C:/Program Files (x86)/Windows Kits/NETFXSDK/4.6.1/include/um" \
+    "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/shared" \
+    "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/um" \
+    "C:/Program Files (x86)/Windows Kits/10/include/10.0.18362.0/winrt"
+QMAKE_CXX.LIBDIRS = \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/LIB/store" \
+    "C:/Program Files (x86)/Windows Kits/10/lib/10.0.18362.0/ucrt/x86" \
+    "C:/Program Files (x86)/Windows Kits/NETFXSDK/4.6.1/lib/um/x86" \
+    "C:/Program Files (x86)/Windows Kits/10/lib/10.0.18362.0/um/x86"
+QMAKE_CXX.PATH = \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/Common7/IDE/CommonExtensions/Microsoft/TestWindow" \
+    "C:/Program Files (x86)/MSBuild/14.0/bin/amd64" \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/BIN/amd64_x86" \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/BIN/amd64" \
+    C:/Windows/Microsoft.NET/Framework64/v4.0.30319 \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/VCPackages" \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/Common7/IDE" \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/Common7/Tools" \
+    "C:/Program Files (x86)/HTML Help Workshop" \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/Team Tools/Performance Tools/x64" \
+    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/Team Tools/Performance Tools" \
+    "C:/Program Files (x86)/Windows Kits/10/bin/x64" \
+    "C:/Program Files (x86)/Windows Kits/10/bin/x86" \
+    "C:/Program Files (x86)/Microsoft SDKs/Windows/v10.0A/bin/NETFX 4.6.1 Tools/x64" \
+    C:/Qt/Qt_OpenSource/5.14.1/msvc2017_64/bin \
+    "C:/Program Files (x86)/Common Files/Oracle/Java/javapath" \
+    "C:/Program Files/Basler/pylon 5/Runtime/x64" \
+    C:/Qt/Qt5.8.0/5.8/msvc2015_64/bin \
+    "C:/Program Files (x86)/Common Files/MVS/Runtime/Win32_i86" \
+    "C:/Program Files (x86)/Common Files/MVS/Runtime/Win64_x64" \
+    C:/Windows/system32 \
+    C:/Windows \
+    C:/Windows/System32/Wbem \
+    C:/Windows/System32/WindowsPowerShell/v1.0 \
+    C:/Windows/System32/OpenSSH \
+    "C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common" \
+    "C:/Program Files/NVIDIA Corporation/NVIDIA NvDLISR" \
+    C:/MinGW/bin \
+    "C:/Program Files/Java/jdk-14.0.2/bin" \
+    "C:/Program Files/Microsoft SQL Server/120/Tools/Binn" \
+    "C:/Program Files/nodejs" \
+    C:/ProgramData/chocolatey/bin \
+    "C:/Program Files/MVTec/HALCON-12.0/bin/x64-win64" \
+    "C:/Program Files/MVTec/HALCON-12.0/FLEXlm/x64-win64" \
+    "C:/Program Files/OpenCV/opencv/build/x64/vc14/bin" \
+    "C:/Program Files/TortoiseGit/bin" \
+    "C:/Program Files/doxygen/bin" \
+    "C:/Program Files/Microsoft/Web Platform Installer" \
+    "C:/Program Files/dotnet" \
+    "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.26.28801/bin/Hostx86/x86" \
+    C:/WINDOWS/system32 \
+    C:/WINDOWS \
+    C:/WINDOWS/System32/Wbem \
+    C:/WINDOWS/System32/WindowsPowerShell/v1.0 \
+    C:/WINDOWS/System32/OpenSSH \
+    "C:/Program Files/flutter/bin" \
+    "C:/Program Files/Git/cmd" \
+    "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.27.29110/bin/Hostx86/x86" \
+    C:/Users/amadu/AppData/Local/Programs/Python/Python38-32/Scripts \
+    C:/Users/amadu/AppData/Local/Programs/Python/Python38-32 \
+    C:/Users/amadu/AppData/Local/Microsoft/WindowsApps \
+    "C:/Users/amadu/AppData/Local/Programs/Microsoft VS Code/bin" \
+    C:/Users/amadu/AppData/Roaming/npm

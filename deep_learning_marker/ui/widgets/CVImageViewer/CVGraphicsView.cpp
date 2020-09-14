@@ -30,12 +30,14 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	QPixmap img;
 	img = m_pixmap->pixmap();
 	m_imgCanvas->drawPixmap(QRect(0, 0, width(), height()), img);
+	m_imgCanvas->end();
 
 	QSize rectSize = event->rect().size();
-	ImageModel::instance()->scalingFactory = 1.0 * rectSize.width() / m_pixmap->pixmap().size().width();
+	ImageModel::instance()->scalingFactory = 1.0 * rectSize.width() / m_pixmap->pixmap().width();
+	m_pixmap->pixmap().size().scale(m_pixmap->pixmap().size() * ImageModel::instance()->scalingFactory, Qt::KeepAspectRatio);
 
-	m_topleft.setX((viewport()->width() - m_pixmap->pixmap().width()) / 2);
-	m_topleft.setY((viewport()->height() - m_pixmap->pixmap().height()) / 2);
+	m_topleft.setX((width() - m_pixmap->pixmap().width()) / 2);
+	m_topleft.setY((height() - m_pixmap->pixmap().height()) / 2);
 
 	m_roiCanvas = new QPainter(viewport());
 
@@ -131,6 +133,8 @@ void CVGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 	RoiRectModel::instance()->penCase.push_back(RoiRectModel::instance()->suit);
 
 	emit SignalCenter::instance()->displayRoiEndPoint(RoiRectModel::instance()->endPoint);
+
+	m_roiCanvas->end();
 }
 
 void CVGraphicsView::resizeEvent(QResizeEvent* event)
@@ -159,9 +163,8 @@ bool CVGraphicsView::isContainPoint(const QPoint& point)
 		return true;
 	}
 
-	QPoint topleft;
-	topleft.setX((viewport()->width() - pixSize.width()) / 2);
-	topleft.setY((viewport()->height() - pixSize.height()) / 2);
+	m_topleft.setX((viewport()->width() - pixSize.width()) / 2);
+	m_topleft.setY((viewport()->height() - pixSize.height()) / 2);
 
 	QRect rect(m_topleft, pixSize);
 	return rect.contains(point);
@@ -173,26 +176,25 @@ QPoint CVGraphicsView::mapToPixmap(const QPoint& point)
 	QPoint pos;
 	pixSize.scale(ImageModel::instance()->scalingFactory * pixSize, Qt::KeepAspectRatio);
 
-	if (pixSize.width() > viewport()->width() && pixSize.height() > viewport()->height())
+	if (pixSize.width() > width() && pixSize.height() > height())
 	{
-		pos.setX(pixSize.width() - (viewport()->width() - point.x()));
-		pos.setY(pixSize.height() - (viewport()->height() - point.y()));
+		pos.setX(pixSize.width() - (width() - point.x()));
+		pos.setY(pixSize.height() - (height() - point.y()));
 	}
-	else if (pixSize.width() < viewport()->width() && pixSize.height() > viewport()->height())
+	else if (pixSize.width() < width() && pixSize.height() > height())
 	{
-		pos.setX(point.x() - (viewport()->width() - pixSize.width()) / 2);
-		pos.setY(pixSize.height() - (viewport()->height() - point.y()));
+		pos.setX(point.x() - (width() - pixSize.width()) / 2);
+		pos.setY(pixSize.height() - (height() - point.y()));
 	}
-	else if (pixSize.width() > viewport()->width() && pixSize.height() < viewport()->height())
+	else if (pixSize.width() > width() && pixSize.height() < height())
 	{
-		pos.setX(pixSize.width() - (viewport()->width() - point.x()));
-		pos.setY(point.y() - (viewport()->height() - pixSize.height()) / 2);
+		pos.setX(pixSize.width() - (width() - point.x()));
+		pos.setY(point.y() - (height() - pixSize.height()) / 2);
 	}
 	else
 	{
-		QPoint topleft;
-		topleft.setX((viewport()->width() - pixSize.width()) / 2);
-		topleft.setY((viewport()->height() - pixSize.height()) / 2);
+		m_topleft.setX((width() - pixSize.width()) / 2);
+		m_topleft.setY((height() - pixSize.height()) / 2);
 		pos.setX(point.x() - m_topleft.x());
 		pos.setY(point.y() - m_topleft.y());
 	}

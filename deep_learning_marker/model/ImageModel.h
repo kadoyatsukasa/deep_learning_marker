@@ -11,7 +11,8 @@ public:
 	static ImageModel* instance();
 
 public:
-	std::vector<QString> imageDirector;
+	std::vector<QString> imageArchive;
+	std::vector<QString>::iterator currentImage;
 	QString imageFilePathName;
 	QString imageFilePath;
 	QString imageFileName;

@@ -13,6 +13,12 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{
+	color:green;
+	background:transparent;
+}</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="3">
     <widget class="QLabel" name="lbROIStart">

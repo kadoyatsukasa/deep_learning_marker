@@ -16,6 +16,7 @@ OptionsButtonBar::OptionsButtonBar(QWidget* parent) :
 	connect(ui->btnLoadImage, SIGNAL(clicked()), this, SLOT(handleLoadSingleImage()));
 	connect(ui->btnClearAll, SIGNAL(clicked()), this, SLOT(handleClearAllMarks()));
 	connect(ui->btnSaveMarks, SIGNAL(clicked()), this, SLOT(handleSaveAllPositions()));
+	connect(ui->btnLoadArchive, SIGNAL(clicked()), this, SLOT(handleLoadArchive()));
 }
 
 OptionsButtonBar::~OptionsButtonBar()
@@ -45,6 +46,28 @@ void OptionsButtonBar::handleLoadSingleImage()
 		qDebug() << info.fileName();
 		qDebug() << info.baseName();
 	}
+}
+
+void OptionsButtonBar::handleLoadArchive()
+{
+	QString filepath = QFileDialog::getExistingDirectory(this, QStringLiteral("Ñ¡ÔñÎÄ¼þ¼Ð"), "./");
+	if (filepath.isEmpty())
+	{
+		return;
+	}
+	QDir dir(filepath);
+	dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+	dir.setSorting(QDir::Size | QDir::Reversed);
+	QFileInfoList fileInformation = dir.entryInfoList();
+
+	for (int i = 0; i < fileInformation.size(); ++i)
+	{
+		QFileInfo info = fileInformation.at(i);
+		ImageModel::instance()->imageArchive.push_back(info.absoluteFilePath());
+		qDebug() << ImageModel::instance()->imageArchive[i];
+	}
+	ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.begin();
+	emit SignalCenter::instance()->displayImage(ImageModel::instance()->imageArchive[0]);
 }
 
 void OptionsButtonBar::handleSaveAllPositions()

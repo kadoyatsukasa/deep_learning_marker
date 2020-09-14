@@ -10,6 +10,7 @@
 #include "model/RoiRectModel.h"
 
 #include <QModelIndex>
+#include <QKeyEvent>
 
 MainWidget::MainWidget(QWidget* parent) :
 	QWidget(parent),
@@ -41,4 +42,42 @@ void MainWidget::handleChangePen(const QModelIndex& index)
 	t_pen.setWidth(3);
 
 	RoiRectModel::instance()->suit.pen = t_pen;
+}
+
+void MainWidget::keyPressEvent(QKeyEvent* event)
+{
+	switch (event->key())
+	{
+	case Qt::Key_D:
+		if (ImageModel::instance()->currentImage == ImageModel::instance()->imageArchive.end() - 1)
+		{
+			ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.begin();
+			ui->graphicsView->loadImage(*ImageModel::instance()->currentImage);
+		}
+		else
+		{
+			++ImageModel::instance()->currentImage;
+			ui->graphicsView->loadImage(*ImageModel::instance()->currentImage);
+		}
+		break;
+
+	case Qt::Key_A:
+		if (ImageModel::instance()->currentImage == ImageModel::instance()->imageArchive.begin())
+		{
+			ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.end() - 1;
+			ui->graphicsView->loadImage(*ImageModel::instance()->currentImage);
+		}
+		else
+		{
+			--ImageModel::instance()->currentImage;
+			ui->graphicsView->loadImage(*ImageModel::instance()->currentImage);
+		}
+		break;
+	case Qt::Key_W:
+		break;
+	case Qt::Key_S:
+		break;
+	default:
+		break;
+	}
 }

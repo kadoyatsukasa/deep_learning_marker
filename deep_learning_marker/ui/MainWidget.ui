@@ -13,12 +13,33 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#listView,#mousePos{
+	color:green;
+}
+#listView{
+	font:16px;
+}
+
+#mousePos,#buttonBar{
+	border:1px solid white;
+}</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout" rowstretch="9,1" columnstretch="1,5,1">
    <property name="spacing">
     <number>10</number>
    </property>
    <item row="0" column="2">
-    <widget class="OptionsButtonBar" name="buttonBar" native="true"/>
+    <widget class="OptionsButtonBar" name="buttonBar" native="true">
+     <property name="font">
+      <font>
+       <family>楷体</family>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </widget>
    </item>
    <item row="0" column="1">
     <widget class="CVGraphicsView" name="graphicsView"/>
@@ -27,7 +48,16 @@
     <widget class="MousePositionWidget" name="mousePos" native="true"/>
    </item>
    <item row="0" column="0">
-    <widget class="ParamList" name="listView"/>
+    <widget class="ParamList" name="listView">
+     <property name="font">
+      <font>
+       <pointsize>-1</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
