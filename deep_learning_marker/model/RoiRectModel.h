@@ -10,6 +10,12 @@ struct PEN_CASE
 	QRect rect;
 };
 
+struct REGION_CASE
+{
+	QString paraName;
+	std::vector<QRect> regions;
+};
+
 class RoiRectModel
 {
 public:
@@ -36,10 +42,11 @@ public:
 		0xFF00FF
 	};
 
-	std::vector<QPen> pencilCase;
-
+	std::vector<REGION_CASE> regionCase;
 	std::vector<PEN_CASE> penCase;
+
 	PEN_CASE suit;
+	REGION_CASE roiItem;
 
 private:
 	RoiRectModel();

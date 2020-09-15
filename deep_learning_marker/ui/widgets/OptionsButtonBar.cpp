@@ -5,6 +5,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include "model/ImageModel.h"
+#include "model/ParamListModel.h"
 #include "model/RoiRectModel.h"
 #include "controller/SignalCenter.h"
 
@@ -72,31 +73,7 @@ void OptionsButtonBar::handleLoadArchive()
 
 void OptionsButtonBar::handleSaveAllPositions()
 {
-	QFile file(QString("%1/conf-%2.conf").arg(ImageModel::instance()->imageFilePath).arg(ImageModel::instance()->imageFileName));
-	QTextStream out(&file);
-
-	if (file.open(QFile::WriteOnly | QFile::Truncate))
-	{
-		for (int i = 0, j = 0, k = 0;
-			i < RoiRectModel::instance()->roiStartPoints.size(),
-			j < RoiRectModel::instance()->roiEndPoints.size(),
-			k < RoiRectModel::instance()->roiRects.size();
-			i++, j++, k++)
-		{
-			out << "[ROI]" << '\n';
-
-			out << "startPoint:" << "(" <<
-				RoiRectModel::instance()->roiStartPoints[i].x() << "," <<
-				RoiRectModel::instance()->roiStartPoints[i].y() << ")" << '\n';
-
-			out << "endPoint:" << "(" <<
-				RoiRectModel::instance()->roiEndPoints[j].x() << "," <<
-				RoiRectModel::instance()->roiEndPoints[j].y() << ")" << '\n';
-
-			out << "width = " << RoiRectModel::instance()->roiRects[k].width() << ","
-				<< "height = " << RoiRectModel::instance()->roiRects[k].height() << '\n';
-		}
-	}
+	saveAsConfig();
 }
 
 void OptionsButtonBar::handleClearAllMarks()
@@ -104,20 +81,24 @@ void OptionsButtonBar::handleClearAllMarks()
 	emit SignalCenter::instance()->clearAllMarks();
 }
 
-void OptionsButtonBar::clearAllRects(std::vector<QRect> roiRects)
+void OptionsButtonBar::saveAsConfig()
 {
-	roiRects.clear();
-	//emit SignalCenter::instance()->clearAllRects(roiRects);
-}
+	QFile file(QString("%1/conf-%2.conf").arg(ImageModel::instance()->imageFilePath).arg(ImageModel::instance()->imageFileName));
+	QTextStream out(&file);
 
-void OptionsButtonBar::clearAllStartPoints(std::vector<QPoint> startPoint)
-{
-	startPoint.clear();
-	//emit SignalCenter::instance()->clearAllStartPoints(startPoint);
-}
-
-void OptionsButtonBar::clearAllEndPoints(std::vector<QPoint> endPoint)
-{
-	endPoint.clear();
-	//emit SignalCenter::instance()->clearAllEndPoints(endPoint);
+	if (file.open(QFile::WriteOnly | QFile::Truncate))
+	{
+		for (int i = 0; i < ParamListModel::instance()->paramNameList.size(); i++)
+		{
+			out << ParamListModel::instance()->paramNameList[i] << '\n';
+			for (int j = i; j < RoiRectModel::instance()->regionCase[i].regions.size(); j++)
+			{
+				out << "Gravity Point ("
+					<< RoiRectModel::instance()->regionCase[i].regions[j].x() << ","
+					<< RoiRectModel::instance()->regionCase[i].regions[j].y() << ")\n";
+				out << "width = " << RoiRectModel::instance()->regionCase[i].regions[j].width() << '\t'
+					<< "height = " << RoiRectModel::instance()->regionCase[i].regions[j].height() << '\n';
+			}
+		}
+	}
 }

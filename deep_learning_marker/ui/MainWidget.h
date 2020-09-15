@@ -26,7 +26,11 @@ protected:
 
 private slots:
 	void handleDisplayImage(QString);
-	void handleChangePen(const QModelIndex& index);
+	void handleSelectPara(const QModelIndex& index);
+
+private:
+	void changePenColor(const QModelIndex& index);
+	void changeCurrentPara(const QModelIndex& index);
 
 private:
 	Ui::MainWidget* ui;

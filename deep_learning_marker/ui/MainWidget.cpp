@@ -8,6 +8,7 @@
 #include "controller/SignalCenter.h"
 #include "model/ImageModel.h"
 #include "model/RoiRectModel.h"
+#include "model/ParamListModel.h"
 
 #include <QModelIndex>
 #include <QKeyEvent>
@@ -23,7 +24,7 @@ MainWidget::MainWidget(QWidget* parent) :
 	ui->setupUi(this);
 
 	connect(SignalCenter::instance(), SIGNAL(displayImage(QString)), this, SLOT(handleDisplayImage(QString)));
-	connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(handleChangePen(QModelIndex)));
+	connect(ui->listView, SIGNAL(clicked(QModelIndex)), this, SLOT(handleSelectPara(QModelIndex)));
 }
 
 MainWidget::~MainWidget()
@@ -36,12 +37,10 @@ void MainWidget::handleDisplayImage(QString absolutePath)
 	ui->graphicsView->loadImage(absolutePath);
 }
 
-void MainWidget::handleChangePen(const QModelIndex& index)
+void MainWidget::handleSelectPara(const QModelIndex& index)
 {
-	QPen t_pen(RoiRectModel::instance()->colourPen[index.row()]);
-	t_pen.setWidth(3);
-
-	RoiRectModel::instance()->suit.pen = t_pen;
+	changePenColor(index);
+	changeCurrentPara(index);
 }
 
 void MainWidget::keyPressEvent(QKeyEvent* event)
@@ -80,4 +79,17 @@ void MainWidget::keyPressEvent(QKeyEvent* event)
 	default:
 		break;
 	}
+}
+
+void MainWidget::changePenColor(const QModelIndex& index)
+{
+	QPen t_pen(RoiRectModel::instance()->colourPen[index.row()]);
+	t_pen.setWidth(3);
+
+	RoiRectModel::instance()->suit.pen = t_pen;
+}
+
+void MainWidget::changeCurrentPara(const QModelIndex& index)
+{
+	RoiRectModel::instance()->roiItem.paraName = ParamListModel::instance()->paramNameList[index.row()];
 }

@@ -2,7 +2,6 @@
 #define OPTIONSBUTTONBAR_H
 
 #include <QWidget>
-//#include <QSettings>
 #include <QFile>
 #include <QFileInfo>
 
@@ -25,9 +24,7 @@ private slots:
 	void handleClearAllMarks();
 
 private:
-	void clearAllRects(std::vector<QRect> roiRects);
-	void clearAllStartPoints(std::vector<QPoint> startPoints);
-	void clearAllEndPoints(std::vector<QPoint> endPoints);
+	void saveAsConfig();
 
 private:
 	Ui::OptionsButtonBar* ui;
