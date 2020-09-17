@@ -23,8 +23,8 @@ private slots:
 	void handleSaveAllPositions();
 	void handleClearAllMarks();
 
-private:
-	void saveAsConfig();
+	//private:
+	//	void saveAsConfig();
 
 private:
 	Ui::OptionsButtonBar* ui;

@@ -34,7 +34,8 @@ SOURCES += \
     model/ImageModel.cpp \
     model/RoiRectModel.cpp \
     ui/widgets/OptionsButtonBar.cpp \
-    ui/widgets/ParamList.cpp 
+    ui/widgets/ParamList.cpp  \
+    utils/FileUtil.cpp
 
 HEADERS += \
     controller/SignalCenter.h \
@@ -47,7 +48,8 @@ HEADERS += \
     model/ImageModel.h \
     model/RoiRectModel.h   \
     ui/widgets/OptionsButtonBar.h \
-    ui/widgets/ParamList.h 
+    ui/widgets/ParamList.h  \
+    utils/FileUtil.h
 
 FORMS += \
     ui/widgets/MousePostionWidget.ui \

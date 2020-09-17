@@ -17,6 +17,9 @@ signals:
 	void displayRoiEndPoint(QPoint);
 
 	void clearAllMarks();
+
+	void goNext(int);
+	void goFore(int);
 private:
 	explicit SignalCenter();
 };

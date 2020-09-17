@@ -4,16 +4,20 @@
 #include <QObject>
 #include <QWidget>
 #include <QListView>
+#include <QListWidget>
 #include <QStandardItemModel>
 
 class RoiRectModel;
 class ParamListModel;
 
-class ParamList : public QListView
+class ParamList : public QListWidget
 {
 	Q_OBJECT
 public:
 	ParamList(QWidget* parent = nullptr);
+
+public slots:
+	void changeCurrentRow(int row);
 
 private:
 	void init();

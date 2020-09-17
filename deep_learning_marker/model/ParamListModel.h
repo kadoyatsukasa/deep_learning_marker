@@ -4,6 +4,7 @@
 #include <vector>
 #include <QString>
 #include <map>
+#include <QStandardItemModel>
 
 class RoiRectModel;
 
@@ -13,7 +14,11 @@ public:
 	static  ParamListModel* instance();
 
 	std::vector<QString> paramNameList;
-	std::vector<std::map<QString, RoiRectModel>> paramList;
+	std::vector<QString>::iterator currentName;
+
+	QModelIndex paraIndex;
+	QStandardItemModel* paraItem;
+
 private:
 	ParamListModel();
 };

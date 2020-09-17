@@ -30,7 +30,6 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	QPixmap img;
 	img = m_pixmap->pixmap();
 	m_imgCanvas->drawPixmap(QRect(0, 0, viewport()->width(), viewport()->height()), img);
-	m_imgCanvas->end();
 
 	QSize rectSize = event->rect().size();
 	ImageModel::instance()->scalingFactory = 1.0 * rectSize.width() / m_pixmap->pixmap().width();
@@ -40,8 +39,6 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	m_topleft.setY((viewport()->height() - m_pixmap->pixmap().height()) / 2);
 
 	m_roiCanvas = new QPainter(viewport());
-
-	m_roiCanvas->setPen(RoiRectModel::instance()->suit.pen);
 
 	if (RoiRectModel::instance()->startPoint.x() < RoiRectModel::instance()->endPoint.x())
 	{
@@ -85,6 +82,7 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 		}
 	}
 
+	m_roiCanvas->setPen(RoiRectModel::instance()->suit.pen);
 	m_roiCanvas->drawRect(RoiRectModel::instance()->suit.rect);
 
 	refresh(m_roiCanvas);
@@ -129,15 +127,13 @@ void CVGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 	RoiRectModel::instance()->roiEndPoints.push_back(RoiRectModel::instance()->endPoint);
 	RoiRectModel::instance()->roiRects.push_back(rect);
 
-	RoiRectModel::instance()->suit.rect = rect;
+	//RoiRectModel::instance()->suit.rect = rect;
 	RoiRectModel::instance()->penCase.push_back(RoiRectModel::instance()->suit);
 
 	RoiRectModel::instance()->roiItem.regions.push_back(rect);
 	RoiRectModel::instance()->regionCase.push_back(RoiRectModel::instance()->roiItem);
 
 	emit SignalCenter::instance()->displayRoiEndPoint(RoiRectModel::instance()->endPoint);
-
-	m_roiCanvas->end();
 }
 
 void CVGraphicsView::resizeEvent(QResizeEvent* event)
@@ -233,7 +229,7 @@ void CVGraphicsView::refresh(QPainter* painter)
 {
 	std::vector<PEN_CASE>::iterator it;
 
-	for (it = RoiRectModel::instance()->penCase.begin(); it != RoiRectModel::instance()->penCase.end(); ++it)
+	for (it = RoiRectModel::instance()->penCase.begin(); it != RoiRectModel::instance()->penCase.end(); it++)
 	{
 		painter->setPen(it->pen);
 		painter->drawRect(it->rect);

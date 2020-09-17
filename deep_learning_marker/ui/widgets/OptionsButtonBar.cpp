@@ -4,10 +4,12 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include <QDebug>
+
 #include "model/ImageModel.h"
 #include "model/ParamListModel.h"
 #include "model/RoiRectModel.h"
 #include "controller/SignalCenter.h"
+#include "utils/FileUtil.h"
 
 OptionsButtonBar::OptionsButtonBar(QWidget* parent) :
 	QWidget(parent),
@@ -73,32 +75,10 @@ void OptionsButtonBar::handleLoadArchive()
 
 void OptionsButtonBar::handleSaveAllPositions()
 {
-	saveAsConfig();
+	FileUtil::instance()->saveToConfigFile();
 }
 
 void OptionsButtonBar::handleClearAllMarks()
 {
 	emit SignalCenter::instance()->clearAllMarks();
-}
-
-void OptionsButtonBar::saveAsConfig()
-{
-	QFile file(QString("%1/conf-%2.conf").arg(ImageModel::instance()->imageFilePath).arg(ImageModel::instance()->imageFileName));
-	QTextStream out(&file);
-
-	if (file.open(QFile::WriteOnly | QFile::Truncate))
-	{
-		for (int i = 0; i < ParamListModel::instance()->paramNameList.size(); i++)
-		{
-			out << ParamListModel::instance()->paramNameList[i] << '\n';
-			for (int j = i; j < RoiRectModel::instance()->regionCase[i].regions.size(); j++)
-			{
-				out << "Gravity Point ("
-					<< RoiRectModel::instance()->regionCase[i].regions[j].x() << ","
-					<< RoiRectModel::instance()->regionCase[i].regions[j].y() << ")\n";
-				out << "width = " << RoiRectModel::instance()->regionCase[i].regions[j].width() << '\t'
-					<< "height = " << RoiRectModel::instance()->regionCase[i].regions[j].height() << '\n';
-			}
-		}
-	}
 }

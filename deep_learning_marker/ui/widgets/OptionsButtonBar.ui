@@ -36,6 +36,10 @@ QPushButton{
 	color:green;
 	border:1px solid green;
 	border-radius:10px;
+}
+QPushButton:hover{
+	background-color:green;
+	color:white;
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">

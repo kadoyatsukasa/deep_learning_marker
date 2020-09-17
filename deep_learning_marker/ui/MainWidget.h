@@ -13,6 +13,11 @@ namespace Ui {
 	class MainWidget;
 }
 
+enum DIRECTION
+{
+	FORE,
+	NEXT
+};
 class MainWidget : public QWidget
 {
 	Q_OBJECT
@@ -29,18 +34,11 @@ private slots:
 	void handleSelectPara(const QModelIndex& index);
 
 private:
-	void changePenColor(const QModelIndex& index);
-	void changeCurrentPara(const QModelIndex& index);
-
-private:
 	Ui::MainWidget* ui;
-	MousePositionWidget* m_mousePos;
-	CVGraphicsView* m_image;
-	OptionsButtonBar* m_buttonBar;
-	ParamList* m_list;
 
 	QPen m_pen;
 	std::vector<QString>::iterator m_currentImage;
+	int m_currentRow;
 };
 
 #endif // MAINWIDGET_H

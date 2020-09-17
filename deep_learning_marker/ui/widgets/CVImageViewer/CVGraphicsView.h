@@ -13,16 +13,15 @@ public:
 
 	void loadImage(QString absolutePath);
 
+public slots:
+	void handleClearMarks();
+
 protected:
 	void mousePressEvent(QMouseEvent* event) override;
 	void mouseMoveEvent(QMouseEvent* event) override;
 	void mouseReleaseEvent(QMouseEvent* event) override;
 	void paintEvent(QPaintEvent* event) override;
 	void resizeEvent(QResizeEvent* event) override;
-
-private slots:
-	void handleClearMarks();
-
 private:
 	void init();
 	bool isContainPoint(const QPoint& point);

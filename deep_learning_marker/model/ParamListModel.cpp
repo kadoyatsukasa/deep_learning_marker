@@ -1,5 +1,7 @@
 #include "ParamListModel.h"
 #include "model/RoiRectModel.h"
+#include <QListView>
+#include <QModelIndex>
 ParamListModel::ParamListModel()
 
 {

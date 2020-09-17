@@ -63,11 +63,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ParamList</class>
-   <extends>QListView</extends>
-   <header>ui/widgets/ParamList.h</header>
-  </customwidget>
-  <customwidget>
    <class>MousePositionWidget</class>
    <extends>QWidget</extends>
    <header>ui/widgets/MousePositionWidget.h</header>
@@ -83,6 +78,11 @@
    <extends>QWidget</extends>
    <header>ui/widgets/OptionsButtonBar.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ParamList</class>
+   <extends>QListWidget</extends>
+   <header>ui/widgets/ParamList.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
