@@ -14,7 +14,7 @@ public:
 	void loadImage(QString absolutePath);
 
 public slots:
-	void handleClearMarks();
+	void clearAllMarks();
 
 protected:
 	void mousePressEvent(QMouseEvent* event) override;
@@ -26,6 +26,9 @@ private:
 	void init();
 	bool isContainPoint(const QPoint& point);
 	QPoint mapToPixmap(const QPoint& point);
+
+	void drawFirst(QPainter*);
+	void drawFromFile(QPainter*);
 
 	void refresh(QPainter*);
 

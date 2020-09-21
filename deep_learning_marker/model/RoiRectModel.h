@@ -6,14 +6,14 @@
 
 struct PEN_CASE
 {
-	QPen pen;
+	QPen crayon;
 	QRect rect;
 };
 
 struct REGION_CASE
 {
 	QString paraName;
-	std::vector<QRect> regions;
+	std::vector<PEN_CASE> regions;
 };
 
 class RoiRectModel
@@ -24,6 +24,9 @@ public:
 	inline int height()const { return qAbs(startPoint.y() - endPoint.y()); }
 	inline int width()const { return qAbs(startPoint.x() - endPoint.x()); }
 	inline QSize& size()const { return QSize(width(), height()); }
+
+	void dataReset();
+	bool dataExsits();
 
 public:
 	QPoint startPoint;
@@ -36,15 +39,13 @@ public:
 	const std::vector<int> colourPen = {
 		0xFF0000,
 		0xFF1493,
-		0x00FF7F,
-		0x00FFFF,
 		0x00FF00,
+		0x00FFFF,
+		0x00FF7F,
 		0xFF00FF
 	};
 
 	std::vector<REGION_CASE> regionCase;
-	std::vector<PEN_CASE> penCase;
-
 	PEN_CASE suit;
 	REGION_CASE roiItem;
 

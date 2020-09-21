@@ -37,6 +37,6 @@ void ParamList::changeCurrentRow(int currentRow)
 
 	QPen t_pen(RoiRectModel::instance()->colourPen[currentRow]);
 	t_pen.setWidth(3);
-	RoiRectModel::instance()->suit.pen = t_pen;
+	RoiRectModel::instance()->suit.crayon = t_pen;
 	RoiRectModel::instance()->roiItem.paraName = ParamListModel::instance()->paramNameList[currentRow];
 }

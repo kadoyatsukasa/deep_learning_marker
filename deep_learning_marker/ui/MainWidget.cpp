@@ -29,6 +29,11 @@ MainWidget::MainWidget(QWidget* parent) :
 	ui->listView->setFocus();
 	ui->listView->setCurrentRow(0);
 	m_currentRow = ui->listView->currentRow();
+
+	for (int i = 0; i < ui->listView->count(); i++)
+	{
+		ui->listView->item(i)->setForeground(QColor(RoiRectModel::instance()->colourPen[i]));
+	}
 }
 
 MainWidget::~MainWidget()
@@ -45,7 +50,7 @@ void MainWidget::handleSelectPara(const QModelIndex& index)
 {
 	QPen t_pen(RoiRectModel::instance()->colourPen[index.row()]);
 	t_pen.setWidth(3);
-	RoiRectModel::instance()->suit.pen = t_pen;
+	RoiRectModel::instance()->suit.crayon = t_pen;
 	RoiRectModel::instance()->roiItem.paraName = ParamListModel::instance()->paramNameList[index.row()];
 }
 
@@ -54,9 +59,9 @@ void MainWidget::keyPressEvent(QKeyEvent* event)
 	switch (event->key())
 	{
 	case Qt::Key_D:
-		if (ImageModel::instance()->currentImage == ImageModel::instance()->imageArchive.end())
+		if (ImageModel::instance()->currentImage == ImageModel::instance()->imageArchive.end() - 1)
 		{
-			ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.begin() - 1;
+			ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.begin();
 			ui->graphicsView->loadImage(*ImageModel::instance()->currentImage);
 		}
 		else
@@ -67,9 +72,9 @@ void MainWidget::keyPressEvent(QKeyEvent* event)
 		break;
 
 	case Qt::Key_A:
-		if (ImageModel::instance()->currentImage == ImageModel::instance()->imageArchive.begin() - 1)
+		if (ImageModel::instance()->currentImage == ImageModel::instance()->imageArchive.begin())
 		{
-			ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.end();
+			ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.end() - 1;
 			ui->graphicsView->loadImage(*ImageModel::instance()->currentImage);
 		}
 		else
@@ -87,13 +92,13 @@ void MainWidget::keyPressEvent(QKeyEvent* event)
 		++m_currentRow;
 		qDebug() << m_currentRow;
 		emit SignalCenter::instance()->goNext(m_currentRow);
-		//ui->listView->changeCurrentRow(m_currentRow);
+
 		break;
 	case Qt::Key_E:
 		FileUtil::instance()->saveToConfigFile();
 		break;
 	case Qt::Key_C:
-		ui->graphicsView->handleClearMarks();
+		ui->graphicsView->clearAllMarks();
 		break;
 	default:
 		break;

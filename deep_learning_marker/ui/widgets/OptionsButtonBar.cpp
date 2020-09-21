@@ -62,14 +62,21 @@ void OptionsButtonBar::handleLoadArchive()
 	dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 	dir.setSorting(QDir::Size | QDir::Reversed);
 	QFileInfoList fileInformation = dir.entryInfoList();
+	QString suffixString;
 
 	for (int i = 0; i < fileInformation.size(); ++i)
 	{
 		QFileInfo info = fileInformation.at(i);
+		suffixString = info.suffix();
+		if (suffixString == "conf")
+		{
+			continue;
+		}
+
 		ImageModel::instance()->imageArchive.push_back(info.absoluteFilePath());
-		qDebug() << ImageModel::instance()->imageArchive[i];
 	}
 	ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.begin();
+
 	emit SignalCenter::instance()->displayImage(ImageModel::instance()->imageArchive[0]);
 }
 

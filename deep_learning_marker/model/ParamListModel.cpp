@@ -5,10 +5,10 @@
 ParamListModel::ParamListModel()
 
 {
-	paramNameList.push_back(QString::fromLocal8Bit("参数一"));
-	paramNameList.push_back(QString::fromLocal8Bit("参数二"));
-	paramNameList.push_back(QString::fromLocal8Bit("参数三"));
-	paramNameList.push_back(QString::fromLocal8Bit("参数四"));
+	paramNameList.push_back(QString::fromLocal8Bit("Para01"));
+	paramNameList.push_back(QString::fromLocal8Bit("Para02"));
+	paramNameList.push_back(QString::fromLocal8Bit("Para03"));
+	paramNameList.push_back(QString::fromLocal8Bit("Para04"));
 }
 
 ParamListModel* ParamListModel::instance()

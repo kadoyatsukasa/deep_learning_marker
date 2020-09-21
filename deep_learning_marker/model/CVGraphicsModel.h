@@ -20,7 +20,7 @@ public:
 	int viewWidth;
 	int viewHeight;
 
-	QPen pen;
+	QPen crayon;
 private:
 	CVGraphicsModel();
 };

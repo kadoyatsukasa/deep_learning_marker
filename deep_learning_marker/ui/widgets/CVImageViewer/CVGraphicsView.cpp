@@ -3,6 +3,7 @@
 #include "model/RoiRectModel.h"
 #include "model/ParamListModel.h"
 #include "controller/SignalCenter.h"
+#include "utils/FileUtil.h"
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
@@ -16,7 +17,7 @@ CVGraphicsView::CVGraphicsView(QWidget* parent) :
 {
 	init();
 
-	connect(SignalCenter::instance(), SIGNAL(clearAllMarks()), this, SLOT(handleClearMarks()));
+	connect(SignalCenter::instance(), SIGNAL(clearAllMarks()), this, SLOT(clearAllMarks()));
 }
 void CVGraphicsView::paintEvent(QPaintEvent* event)
 {
@@ -30,6 +31,7 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	QPixmap img;
 	img = m_pixmap->pixmap();
 	m_imgCanvas->drawPixmap(QRect(0, 0, viewport()->width(), viewport()->height()), img);
+	m_roiCanvas = new QPainter(viewport());
 
 	QSize rectSize = event->rect().size();
 	ImageModel::instance()->scalingFactory = 1.0 * rectSize.width() / m_pixmap->pixmap().width();
@@ -38,54 +40,14 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	m_topleft.setX((viewport()->width() - m_pixmap->pixmap().width()) / 2);
 	m_topleft.setY((viewport()->height() - m_pixmap->pixmap().height()) / 2);
 
-	m_roiCanvas = new QPainter(viewport());
-
-	if (RoiRectModel::instance()->startPoint.x() < RoiRectModel::instance()->endPoint.x())
+	if (FileUtil::instance()->fileIsExsit())
 	{
-		if (RoiRectModel::instance()->startPoint.y() < RoiRectModel::instance()->endPoint.y())
-		{
-			RoiRectModel::instance()->suit.rect = QRect(
-				m_topleft.x() + RoiRectModel::instance()->startPoint.x() * ImageModel::instance()->scalingFactory,
-				m_topleft.y() + RoiRectModel::instance()->startPoint.y() * ImageModel::instance()->scalingFactory,
-				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
-				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory);
-		}
-		else
-		{
-			RoiRectModel::instance()->suit.rect = QRect(
-				m_topleft.x() + RoiRectModel::instance()->startPoint.x() * ImageModel::instance()->scalingFactory,
-				m_topleft.y() + RoiRectModel::instance()->endPoint.y() * ImageModel::instance()->scalingFactory,
-				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
-				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
-			);
-		}
+		drawFromFile(m_roiCanvas);
 	}
 	else
 	{
-		if (RoiRectModel::instance()->startPoint.y() > RoiRectModel::instance()->endPoint.y())
-		{
-			RoiRectModel::instance()->suit.rect = QRect(
-				m_topleft.x() + RoiRectModel::instance()->endPoint.x() * ImageModel::instance()->scalingFactory,
-				m_topleft.y() + RoiRectModel::instance()->endPoint.y() * ImageModel::instance()->scalingFactory,
-				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
-				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
-			);
-		}
-		else
-		{
-			RoiRectModel::instance()->suit.rect = QRect(
-				m_topleft.x() + RoiRectModel::instance()->endPoint.x() * ImageModel::instance()->scalingFactory,
-				m_topleft.y() + RoiRectModel::instance()->startPoint.y() * ImageModel::instance()->scalingFactory,
-				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
-				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
-			);
-		}
+		drawFirst(m_roiCanvas);
 	}
-
-	m_roiCanvas->setPen(RoiRectModel::instance()->suit.pen);
-	m_roiCanvas->drawRect(RoiRectModel::instance()->suit.rect);
-
-	refresh(m_roiCanvas);
 }
 
 void CVGraphicsView::mousePressEvent(QMouseEvent* event)
@@ -127,10 +89,7 @@ void CVGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 	RoiRectModel::instance()->roiEndPoints.push_back(RoiRectModel::instance()->endPoint);
 	RoiRectModel::instance()->roiRects.push_back(rect);
 
-	//RoiRectModel::instance()->suit.rect = rect;
-	RoiRectModel::instance()->penCase.push_back(RoiRectModel::instance()->suit);
-
-	RoiRectModel::instance()->roiItem.regions.push_back(rect);
+	RoiRectModel::instance()->roiItem.regions.push_back(RoiRectModel::instance()->suit);
 	RoiRectModel::instance()->regionCase.push_back(RoiRectModel::instance()->roiItem);
 
 	emit SignalCenter::instance()->displayRoiEndPoint(RoiRectModel::instance()->endPoint);
@@ -204,7 +163,8 @@ QPoint CVGraphicsView::mapToPixmap(const QPoint& point)
 
 void CVGraphicsView::loadImage(QString absolutePath)
 {
-	handleClearMarks();
+	clearAllMarks();
+	RoiRectModel::instance()->dataReset();
 
 	ImageModel::instance()->srcImage = cv::imread(absolutePath.toStdString().c_str());
 
@@ -221,29 +181,89 @@ void CVGraphicsView::loadImage(QString absolutePath)
 			ImageModel::instance()->rgbImage.step,
 			QImage::Format_RGB888
 		);
+
+	if (RoiRectModel::instance()->dataExsits())
+	{
+		RoiRectModel::instance()->dataReset();
+	}
+
 	m_pixmap->setPixmap(QPixmap::fromImage(ImageModel::instance()->targetImage).scaled(viewport()->width(), viewport()->height(), Qt::KeepAspectRatio));
 	m_scene->addItem(m_pixmap);
 }
 
 void CVGraphicsView::refresh(QPainter* painter)
 {
-	std::vector<PEN_CASE>::iterator it;
-
-	for (it = RoiRectModel::instance()->penCase.begin(); it != RoiRectModel::instance()->penCase.end(); it++)
+	for each (REGION_CASE t_caseItem in RoiRectModel::instance()->regionCase)
 	{
-		painter->setPen(it->pen);
-		painter->drawRect(it->rect);
+		for each (PEN_CASE t_roiItem in t_caseItem.regions)
+		{
+			t_roiItem.crayon.setWidth(3);
+			painter->setPen(t_roiItem.crayon);
+			painter->drawRect(t_roiItem.rect);
+		}
 	}
 }
 
-void CVGraphicsView::handleClearMarks()
+void CVGraphicsView::clearAllMarks()
 {
-	RoiRectModel::instance()->roiRects.clear();
-	RoiRectModel::instance()->roiStartPoints.clear();
-	RoiRectModel::instance()->roiEndPoints.clear();
-	RoiRectModel::instance()->startPoint = QPoint(0, 0);
-	RoiRectModel::instance()->endPoint = QPoint(0, 0);
-	RoiRectModel::instance()->penCase.clear();
+	RoiRectModel::instance()->dataReset();
 
 	viewport()->repaint();
+}
+
+void CVGraphicsView::drawFirst(QPainter* painter)
+{
+	QRect t_rect;
+	if (RoiRectModel::instance()->startPoint.x() < RoiRectModel::instance()->endPoint.x())
+	{
+		if (RoiRectModel::instance()->startPoint.y() < RoiRectModel::instance()->endPoint.y())
+		{
+			RoiRectModel::instance()->suit.rect = QRect(
+				m_topleft.x() + RoiRectModel::instance()->startPoint.x() * ImageModel::instance()->scalingFactory,
+				m_topleft.y() + RoiRectModel::instance()->startPoint.y() * ImageModel::instance()->scalingFactory,
+				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
+				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory);
+		}
+		else
+		{
+			RoiRectModel::instance()->suit.rect = QRect(
+				m_topleft.x() + RoiRectModel::instance()->startPoint.x() * ImageModel::instance()->scalingFactory,
+				m_topleft.y() + RoiRectModel::instance()->endPoint.y() * ImageModel::instance()->scalingFactory,
+				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
+				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
+			);
+		}
+	}
+	else
+	{
+		if (RoiRectModel::instance()->startPoint.y() > RoiRectModel::instance()->endPoint.y())
+		{
+			RoiRectModel::instance()->suit.rect = QRect(
+				m_topleft.x() + RoiRectModel::instance()->endPoint.x() * ImageModel::instance()->scalingFactory,
+				m_topleft.y() + RoiRectModel::instance()->endPoint.y() * ImageModel::instance()->scalingFactory,
+				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
+				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
+			);
+		}
+		else
+		{
+			RoiRectModel::instance()->suit.rect = QRect(
+				m_topleft.x() + RoiRectModel::instance()->endPoint.x() * ImageModel::instance()->scalingFactory,
+				m_topleft.y() + RoiRectModel::instance()->startPoint.y() * ImageModel::instance()->scalingFactory,
+				RoiRectModel::instance()->width() * ImageModel::instance()->scalingFactory,
+				RoiRectModel::instance()->height() * ImageModel::instance()->scalingFactory
+			);
+		}
+	}
+
+	painter->setPen(RoiRectModel::instance()->suit.crayon);
+	painter->drawRect(RoiRectModel::instance()->suit.rect);
+
+	refresh(painter);
+}
+
+void CVGraphicsView::drawFromFile(QPainter* painter)
+{
+	FileUtil::instance()->readFromConfigFile();
+	refresh(painter);
 }
