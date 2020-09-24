@@ -34,6 +34,9 @@ private slots:
 	void handleSelectPara(const QModelIndex& index);
 
 private:
+	void initWidget();
+
+private:
 	Ui::MainWidget* ui;
 
 	QPen m_pen;

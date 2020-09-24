@@ -25,15 +25,17 @@ void ParamList::init()
 		addItem(*it);
 	}
 
+	item(0)->setForeground(Qt::black);
+	item(0)->setBackground(QColor(RoiRectModel::instance()->colourPen[0]));
 	setCurrentItem(item(0));
 }
 
 void ParamList::changeCurrentRow(int currentRow)
 {
-	setCurrentRow(currentRow);
 	item(currentRow)->setSelected(true);
+	item(currentRow)->setForeground(Qt::black);
+	item(currentRow)->setBackground(QColor(RoiRectModel::instance()->colourPen[currentRow]));
 	setCurrentItem(item(currentRow));
-	setCurrentIndex(model()->index(currentRow, 0));
 
 	QPen t_pen(RoiRectModel::instance()->colourPen[currentRow]);
 	t_pen.setWidth(3);

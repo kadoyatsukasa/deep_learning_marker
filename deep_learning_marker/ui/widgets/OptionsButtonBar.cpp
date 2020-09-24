@@ -73,11 +73,11 @@ void OptionsButtonBar::handleLoadArchive()
 			continue;
 		}
 
-		ImageModel::instance()->imageArchive.push_back(info.absoluteFilePath());
+		ImageModel::instance()->imageArchive.push_back(info);
 	}
 	ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.begin();
 
-	emit SignalCenter::instance()->displayImage(ImageModel::instance()->imageArchive[0]);
+	emit SignalCenter::instance()->displayImage(ImageModel::instance()->imageArchive[0].absoluteFilePath());
 }
 
 void OptionsButtonBar::handleSaveAllPositions()

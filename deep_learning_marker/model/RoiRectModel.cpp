@@ -29,17 +29,18 @@ void RoiRectModel::dataReset()
 		}
 		t_caseIterator = regionCase.erase(t_caseIterator);
 	}
+
 	roiItem.regions.clear();
 }
 
-bool RoiRectModel::dataExsits()
+bool RoiRectModel::dataExists()
 {
 	return
 		!(roiRects.empty() ||
 			roiStartPoints.empty() ||
 			roiEndPoints.empty() ||
-			startPoint.isNull() ||
-			endPoint.isNull() ||
+			startPoint == QPoint(0, 0) ||
+			endPoint == QPoint(0, 0) ||
 			regionCase.empty() ||
 			roiItem.regions.empty());
 }

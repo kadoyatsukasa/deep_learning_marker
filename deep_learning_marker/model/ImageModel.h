@@ -3,6 +3,7 @@
 #include<vector>
 #include<QString>
 #include<QImage>
+#include <QFileInfo>
 #include <opencv2/opencv.hpp>
 
 class ImageModel
@@ -11,8 +12,8 @@ public:
 	static ImageModel* instance();
 
 public:
-	std::vector<QString> imageArchive;
-	std::vector<QString>::iterator currentImage;
+	std::vector<QFileInfo> imageArchive;
+	std::vector<QFileInfo>::iterator currentImage;
 	QString imageFilePathName;
 	QString imageFilePath;
 	QString imageFileName;

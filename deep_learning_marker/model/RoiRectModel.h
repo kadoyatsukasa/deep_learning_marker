@@ -26,7 +26,7 @@ public:
 	inline QSize& size()const { return QSize(width(), height()); }
 
 	void dataReset();
-	bool dataExsits();
+	bool dataExists();
 
 public:
 	QPoint startPoint;

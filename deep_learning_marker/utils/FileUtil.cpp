@@ -51,7 +51,7 @@ void FileUtil::saveToConfigFile()
 
 	delete m_file;
 
-	if (RoiRectModel::instance()->dataExsits())
+	if (RoiRectModel::instance()->dataExists())
 	{
 		RoiRectModel::instance()->dataReset();
 	}
@@ -60,27 +60,21 @@ void FileUtil::saveToConfigFile()
 void FileUtil::readFromConfigFile()
 {
 	m_file = new QFile(QString("%1/conf-%2.conf").arg(ImageModel::instance()->imageFilePath).arg(ImageModel::instance()->imageFileName));
+	qDebug() << m_file->fileName();
 	if (!m_file->open(QFile::ReadOnly | QFile::Truncate))
 	{
 		return;
 	}
 	else
 	{
-		qDebug() << m_file->fileName();
 		while (!m_file->atEnd())
 		{
 			QByteArray lines = m_file->readLine();
-			qDebug() << lines;
 			parseDoc(lines);
 		}
 
 		m_file->close();
 		delete m_file;
-
-		if (RoiRectModel::instance()->dataExsits())
-		{
-			RoiRectModel::instance()->dataReset();
-		}
 	}
 }
 

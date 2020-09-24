@@ -28,10 +28,9 @@ private:
 	QPoint mapToPixmap(const QPoint& point);
 
 	void drawFirst(QPainter*);
-	void drawFromFile(QPainter*);
+	void drawFromFile();
 
 	void refresh(QPainter*);
-
 private:
 	QGraphicsPixmapItem* m_pixmap;
 	QGraphicsScene* m_scene;
@@ -41,6 +40,7 @@ private:
 
 	bool m_isStartingCrop;
 	bool m_isCroping;
+	bool m_hasReadedFile;
 };
 
 #endif // CVIMAGEVIEW_H

@@ -16,6 +16,7 @@ signals:
 	void displayRoiStartPoint(QPoint);
 	void displayRoiEndPoint(QPoint);
 
+	void drawMarks();
 	void clearAllMarks();
 
 	void goNext(int);

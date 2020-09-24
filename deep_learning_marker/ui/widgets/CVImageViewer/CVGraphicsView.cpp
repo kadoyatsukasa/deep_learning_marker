@@ -28,26 +28,23 @@ void CVGraphicsView::paintEvent(QPaintEvent* event)
 	}
 
 	m_imgCanvas = new QPainter(viewport());
-	QPixmap img;
-	img = m_pixmap->pixmap();
-	m_imgCanvas->drawPixmap(QRect(0, 0, viewport()->width(), viewport()->height()), img);
 	m_roiCanvas = new QPainter(viewport());
+	m_imgCanvas->drawPixmap(QRect(0, 0, viewport()->width(), viewport()->height()), m_pixmap->pixmap());
+
+	m_topleft.setX((viewport()->width() - m_pixmap->pixmap().width()) / 2);
+	m_topleft.setY((viewport()->height() - m_pixmap->pixmap().height()) / 2);
 
 	QSize rectSize = event->rect().size();
 	ImageModel::instance()->scalingFactory = 1.0 * rectSize.width() / m_pixmap->pixmap().width();
 	m_pixmap->pixmap().size().scale(m_pixmap->pixmap().size() * ImageModel::instance()->scalingFactory, Qt::KeepAspectRatio);
 
-	m_topleft.setX((viewport()->width() - m_pixmap->pixmap().width()) / 2);
-	m_topleft.setY((viewport()->height() - m_pixmap->pixmap().height()) / 2);
+	if (m_hasReadedFile == false)
+	{
+		drawFromFile();
+	}
 
-	if (FileUtil::instance()->fileIsExsit())
-	{
-		drawFromFile(m_roiCanvas);
-	}
-	else
-	{
-		drawFirst(m_roiCanvas);
-	}
+	drawFirst(m_roiCanvas);
+	refresh(m_roiCanvas);
 }
 
 void CVGraphicsView::mousePressEvent(QMouseEvent* event)
@@ -108,6 +105,7 @@ void CVGraphicsView::init()
 	m_scene = new QGraphicsScene(this);
 	m_pixmap = new QGraphicsPixmapItem();
 	setScene(m_scene);
+	m_hasReadedFile = false;
 }
 
 bool CVGraphicsView::isContainPoint(const QPoint& point)
@@ -164,8 +162,10 @@ QPoint CVGraphicsView::mapToPixmap(const QPoint& point)
 void CVGraphicsView::loadImage(QString absolutePath)
 {
 	clearAllMarks();
-	RoiRectModel::instance()->dataReset();
-
+	if (RoiRectModel::instance()->dataExists())
+	{
+		RoiRectModel::instance()->dataReset();
+	}
 	ImageModel::instance()->srcImage = cv::imread(absolutePath.toStdString().c_str());
 
 	if (ImageModel::instance()->srcImage.empty())
@@ -182,13 +182,10 @@ void CVGraphicsView::loadImage(QString absolutePath)
 			QImage::Format_RGB888
 		);
 
-	if (RoiRectModel::instance()->dataExsits())
-	{
-		RoiRectModel::instance()->dataReset();
-	}
-
 	m_pixmap->setPixmap(QPixmap::fromImage(ImageModel::instance()->targetImage).scaled(viewport()->width(), viewport()->height(), Qt::KeepAspectRatio));
 	m_scene->addItem(m_pixmap);
+	drawFromFile();
+	viewport()->update();
 }
 
 void CVGraphicsView::refresh(QPainter* painter)
@@ -207,7 +204,6 @@ void CVGraphicsView::refresh(QPainter* painter)
 void CVGraphicsView::clearAllMarks()
 {
 	RoiRectModel::instance()->dataReset();
-
 	viewport()->repaint();
 }
 
@@ -258,12 +254,15 @@ void CVGraphicsView::drawFirst(QPainter* painter)
 
 	painter->setPen(RoiRectModel::instance()->suit.crayon);
 	painter->drawRect(RoiRectModel::instance()->suit.rect);
-
-	refresh(painter);
 }
 
-void CVGraphicsView::drawFromFile(QPainter* painter)
+void CVGraphicsView::drawFromFile()
 {
-	FileUtil::instance()->readFromConfigFile();
-	refresh(painter);
+	if (FileUtil::instance()->fileIsExsit())
+	{
+		FileUtil::instance()->readFromConfigFile();
+		m_hasReadedFile = true;
+	}
+	else
+		m_hasReadedFile = false;
 }
