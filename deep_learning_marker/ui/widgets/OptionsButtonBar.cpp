@@ -76,6 +76,11 @@ void OptionsButtonBar::handleLoadArchive()
 		ImageModel::instance()->imageArchive.push_back(info);
 	}
 	ImageModel::instance()->currentImage = ImageModel::instance()->imageArchive.begin();
+	ImageModel::instance()->imageFilePathName = ImageModel::instance()->currentImage->filePath();
+	ImageModel::instance()->imageFilePath = ImageModel::instance()->currentImage->path();
+	ImageModel::instance()->imageFileName = ImageModel::instance()->currentImage->baseName();
+	if (FileUtil::instance()->fileIsExsit())
+		FileUtil::instance()->readFromConfigFile();
 
 	emit SignalCenter::instance()->displayImage(ImageModel::instance()->imageArchive[0].absoluteFilePath());
 }
